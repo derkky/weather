@@ -1,0 +1,96 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.flexbox {
+	display: flex;
+	border-style: solid;
+}
+
+.container {
+	flex-direction: column;
+	height: 100vh;
+	width: 100vw;
+}
+
+.header {
+	justify-content: flex-end;
+	align-items: center;
+	height: 10%;
+}
+
+.name {
+	margin-right: auto;
+}
+
+.weatherPage {
+	height: 90%;
+	flex-direction: column;
+	align-items: center;
+}
+
+.todayInfo {
+	height: 60%;
+	width: 40%;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.cityName {
+
+}
+
+.weatherTemp {
+	height: 60%;
+	width: 100%;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.todayTemperature {
+	flex-wrap: wrap;
+	justify-content: center;
+	width: 60%;
+}
+
+#temperature {
+	font-size: 20vh;
+	flex-basis: 100%;
+	text-align: center;
+}
+
+#minTemp {
+	margin-right: auto;
+}
+
+.todayWeather {
+	flex-direction: column
+}
+
+.otherInfo {
+	flex-grow: 1;
+	width: 100%;
+	gap: 1em;
+	justify-content: space-around;
+}
+
+.otherInfo > .flexbox {
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.weekInfo {
+	height: 40%;
+	width: 100%;
+	justify-content: space-around;
+}
+
+.weekInfo > .flexbox {
+	flex-direction: column;
+	width: 15%;
+	justify-content: space-around;
+	align-items: center;
+}
