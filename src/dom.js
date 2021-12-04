@@ -173,6 +173,7 @@ const renderBackgroundVideo = function(weatherData){
 	backgroundVideo.autoplay = true
 	backgroundVideo.loop = true
 	backgroundVideo.muted = true
+	backgroundVideo.setAttribute("playsinline", true)
 	backgroundVideo.classList.add("backgroundVideo")
 	backgroundVideo.innerHTML = `<source src="./assets/${sourceVid}.mp4">`
 
