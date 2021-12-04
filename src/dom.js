@@ -6,7 +6,7 @@ const renderHeader = function(){
 	header.classList.add("header", "flexbox")
 	const headerName = document.createElement("h1")
 	headerName.classList.add("name")
-	headerName.innerHTML = 'WEATHER APP'
+	headerName.innerHTML = 'WeatherWhat'
 	const searchBar = document.createElement("form")
 	searchBar.noValidate = "true"
 	searchBar.classList.add("inputForm")
@@ -26,12 +26,12 @@ const renderHeader = function(){
 		if (weatherData != "err") {
 			field.setCustomValidity("")
 			clearWeatherPage()
+			clearBackgroundVideo()
 			renderWeatherPage(weatherData)
+			renderBackgroundVideo(weatherData)
 		} else{
 			field.setCustomValidity(`Sorry, ${cityInput} is not a recognized city name`)
 			field.reportValidity()
-			clearWeatherPage()
-			initWeatherPage()
 		}
 
 		
@@ -47,13 +47,14 @@ const renderHeader = function(){
 
 const createTodayInfo = function(weatherData){
 	const cityName = weatherData.getName()
-	const temperature = weatherData.getTemp(0)
-	const description = weatherData.getWeather(0).main
-	const wind = weatherData.getWind(0)
-	const pressure = weatherData.getPressure(0)
-	const humidity = weatherData.getHumidity(0)
-	const feelsLike = weatherData.getFeelsLike(0)
-	const icon = weatherData.getWeather(0).icon
+	const temperature = weatherData.getCurrentTemp()
+	const dailyTemp = weatherData.getTemp(0)
+	const description = weatherData.getCurrentWeather().main
+	const wind = weatherData.getCurrentWindSpeed()
+	const pressure = weatherData.getCurrentPressure()
+	const humidity = weatherData.getCurrentHumidity()
+	const feelsLike = weatherData.getCurrentFeelsLike()
+	const icon = weatherData.getCurrentWeather().icon
 
 	const todayInfo = document.createElement("div")
 	todayInfo.classList.add("todayInfo", "flexbox")
@@ -65,28 +66,32 @@ const createTodayInfo = function(weatherData){
           <img src="https://openweathermap.org/img/wn/${icon}@2x.png">
         </div>
         <div class="todayTemperature flexbox"> 
-          <p id="temperature"> ${temperature.day} </p>
-          <p> Min Temp </p>
-          <p id="minTemp"> ${temperature.min} </p>
-          <p> Max Temp </p>
-          <p id="maxTemp"> ${temperature.max} </p>
+          <p id="temperature"> ${temperature} </p>
         </div>
       </div>
       <div class="otherInfo flexbox">
+      	<div class="flexbox">
+          <p class="label"> Min Temp </p>
+          <p id="minTemp"> ${dailyTemp.min} </p> 
+        </div>
         <div class="flexbox">
-          <p> Wind </p>
+          <p class="label"> Max Temp </p>
+          <p id="maxTemp"> ${dailyTemp.max} </p> 
+        </div>
+        <div class="flexbox">
+          <p class="label"> Wind </p>
           <p id="wind"> ${wind} </p> 
         </div>
         <div class ="flexbox">
-          <p> Humidity </p>
+          <p class="label"> Humidity </p>
           <p id="humdity"> ${humidity}</p>
         </div>
         <div class="flexbox">
-          <p> Feels Like </p>
+          <p class="label"> Feels Like </p>
           <p id="feelsLike">${feelsLike}</p>
         </div>
         <div class="flexbox">
-          <p> Pressure </p>
+          <p class="label"> Pressure </p>
           <p id="pressure">${pressure}</p>
         </div> 
 	`
@@ -124,13 +129,6 @@ const createWeekInfoBox = function(weatherData){
 	return weekInfoBox
 }
 
-const initWeatherPage = function(){
-	const weatherPage = document.createElement("div")
-	weatherPage.classList.add("weatherPage")
-
-	const content = document.getElementById("content")
-	content.appendChild(weatherPage)
-}
 
 const clearWeatherPage = function(){
 	const weatherPage = document.getElementsByClassName("weatherPage")[0]
@@ -151,6 +149,49 @@ const renderWeatherPage = function(weatherData){
 	const content = document.getElementById("content")
 	content.appendChild(weatherPage)
 
+}
+
+const renderBackgroundVideo = function(weatherData){
+
+	//add logic to chg sourcevid based on weatherdata
+	var sourceVid
+	const weatherCondition = weatherData.getCurrentWeather().icon
+
+	if (["01d", "01n"].includes(weatherCondition)){
+		sourceVid = "sunny"
+	} else if (["02d", "02n", "03d", "03n", "04d", "04n"].includes(weatherCondition)){
+		sourceVid = "clouds"
+	} else if (["09d", "09n", "10d", "10n", "11d", "11n"].includes(weatherCondition)){
+		sourceVid = "rain"
+	} else if (["13d", "13n"].includes(weatherCondition)){
+		sourceVid = "snow"
+	} else {
+		sourceVid = "mist"
+	}
+
+	const backgroundVideo = document.createElement("video")
+	backgroundVideo.autoplay = true
+	backgroundVideo.loop = true
+	backgroundVideo.muted = true
+	backgroundVideo.classList.add("backgroundVideo")
+	backgroundVideo.innerHTML = `<source src="./assets/${sourceVid}.mp4">`
+
+	console.log(backgroundVideo)
+
+	const content = document.getElementById("content")
+	content.appendChild(backgroundVideo)
+
+}
+
+const clearBackgroundVideo = function(){
+	const backgroundVideo = document.getElementsByClassName("backgroundVideo")[0]
+	backgroundVideo.remove()
+}
+
+const initWeatherPage = async function(){
+	const weatherData = await getWeatherData("singapore")
+	renderWeatherPage(weatherData)
+	renderBackgroundVideo(weatherData)
 }
 
 
